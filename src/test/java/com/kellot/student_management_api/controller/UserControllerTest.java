@@ -92,6 +92,16 @@ class UserControllerTest {
     }
 
     @Test
+    void getUserById_shouldReturnNotFoundStatusCodeIfUserWithRequestedIdDoesNotExist() throws Exception {
+        User user = new User("David", 22, "david@gmail.com");
+        user.setId(1L);
+        Mockito.when(userService.getUserById(1L)).thenReturn(user);
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/users/2").contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(request).andExpect(status().isNotFound()).andDo(print());
+    }
+
+    @Test
     void updateUser_shouldReturnUpdatedUser() throws Exception {
         User user = new User("K", 21, "k@gmail.com");
         user.setId(1L);
@@ -114,6 +124,11 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email", is(user.getEmail())));
     }
 
+    @Test
+    void updateUser_shouldReturnBadRequestStatusCodeIfRequestBodyIsEmpty() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders.put("/api/users/{id}", 1);
+        mockMvc.perform(request).andExpect(status().isBadRequest()).andDo(print());
+    }
 
     @Test
     void deleteUser_shouldReturnAcceptedStatusCode() throws Exception {

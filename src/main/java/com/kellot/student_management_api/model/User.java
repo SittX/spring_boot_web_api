@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user")
+@NamedQuery(name="find_all_users",query = "SELECT u FROM User u")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +14,13 @@ public class User {
     }
 
     public User(String username, int age, String email) {
+        this.username = username;
+        this.age = age;
+        this.email = email;
+    }
+
+    public User(Long id, String username, int age, String email) {
+        this.id = id;
         this.username = username;
         this.age = age;
         this.email = email;
@@ -57,5 +65,15 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
